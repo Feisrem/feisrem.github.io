@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Claudiu Mersief Panti · Operaciones Logísticas + Automatización</title>
+  <meta name="description" content="Responsable de Operaciones y Tráfico Logístico con perfil de desarrollador de automatizaciones (Python, JavaScript). Busca nuevo reto en Almería." />
+  <meta name="theme-color" content="#09090b" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'], mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'] },
+          colors: { brand: { DEFAULT: '#FF9900', soft: '#FFB547', dark: '#CC7A00' } }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { background:#09090b; color:#e4e4e7; -webkit-font-smoothing:antialiased; }
+    .grid-bg {
+      background-image: linear-gradient(to right, rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 40%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 40%, transparent 100%);
+    }
+    .glow { background: radial-gradient(circle, rgba(255,153,0,.22), transparent 65%); filter: blur(40px); }
+    .card { background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015)); border:1px solid rgba(255,255,255,.08); }
+    .reveal { opacity:0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.in { opacity:1; transform:none; }
+    .tab-btn[aria-selected="true"] { background: rgba(255,153,0,.12); border-color: rgba(255,153,0,.5); color:#fff; }
+    .tab-btn[aria-selected="true"] .tab-num { color:#FF9900; }
+    .view-btn[aria-pressed="true"] { background: rgba(255,153,0,.15); border-color: rgba(255,153,0,.5); color:#fff; }
+    .code-block { background:#0c0c0f; border:1px solid rgba(255,255,255,.08); }
+    .tok-k { color:#c792ea; } .tok-s { color:#c3e88d; } .tok-c { color:#6b7280; font-style:italic; } .tok-f { color:#82aaff; } .tok-n { color:#FF9900; }
+    .fade-in { animation: fade .45s ease; }
+    @keyframes fade { from { opacity:0; transform:translateY(8px);} to { opacity:1; transform:none; } }
+    .pulse-dot { box-shadow:0 0 0 0 rgba(16,185,129,.6); animation: pulse 2s infinite; }
+    @keyframes pulse { 70% { box-shadow:0 0 0 8px rgba(16,185,129,0);} 100% { box-shadow:0 0 0 0 rgba(16,185,129,0);} }
+    .sim-input { width:100%; background:#0c0c0f; border:1px solid rgba(255,255,255,.12); border-radius:.6rem; padding:.65rem .8rem; color:#fff; font-size:.9rem; outline:none; transition:border-color .2s, box-shadow .2s; color-scheme: dark; }
+    .sim-input:focus { border-color:#FF9900; box-shadow:0 0 0 3px rgba(255,153,0,.15); }
+    .sim-input.err { border-color:#ef4444; }
+    .sim-bar { height:8px; border-radius:999px; background:rgba(255,255,255,.08); overflow:hidden; }
+    .sim-bar > span { display:block; height:100%; width:0; border-radius:999px; transition: width .6s ease, background .3s; }
+    ::selection { background:#FF9900; color:#000; }
+    @media (prefers-reduced-motion: reduce) { .reveal { opacity:1; transform:none; transition:none; } .pulse-dot { animation:none; } html { scroll-behavior:auto; } .fade-in { animation:none; } }
+  </style>
+</head>
+<body class="font-sans">
+
+  <!-- NAVBAR -->
+  <header id="nav" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
+    <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
+      <a href="#top" class="flex items-center gap-2 font-semibold tracking-tight">
+        <span class="w-7 h-7 rounded-md bg-brand text-black grid place-items-center text-xs font-extrabold">CP</span>
+        <span class="hidden sm:inline">Claudiu Mersief Panti</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-7 text-sm text-zinc-400">
+        <a href="#impacto" class="hover:text-white transition">Impacto</a>
+        <a href="#proyectos" class="hover:text-white transition">Proyectos</a>
+        <a href="#stack" class="hover:text-white transition">Stack</a>
+        <a href="#contacto" class="hover:text-white transition">Contacto</a>
+      </nav>
+      <div class="flex items-center gap-2">
+        <a href="CV_Claudiu_Mersief_Panti.pdf" download class="hidden sm:inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg bg-brand text-black hover:bg-brand-soft transition">
+          <i data-lucide="download" class="w-4 h-4"></i> Descargar CV
+        </a>
+        <button id="menuBtn" class="md:hidden p-2 rounded-lg border border-white/10" aria-label="Abrir menú"><i data-lucide="menu" class="w-5 h-5"></i></button>
+      </div>
+    </div>
+    <div id="mobileMenu" class="hidden md:hidden border-t border-white/10 bg-zinc-950/95 backdrop-blur px-5 py-4 space-y-3 text-sm">
+      <a href="#impacto" class="block text-zinc-300">Impacto</a>
+      <a href="#proyectos" class="block text-zinc-300">Proyectos</a>
+      <a href="#stack" class="block text-zinc-300">Stack</a>
+      <a href="#contacto" class="block text-zinc-300">Contacto</a>
+      <a href="CV_Claudiu_Mersief_Panti.pdf" download class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand text-black font-medium"><i data-lucide="download" class="w-4 h-4"></i> Descargar CV</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="relative pt-32 pb-20 sm:pt-44 sm:pb-28 overflow-hidden">
+      <div class="absolute inset-0 grid-bg"></div>
+      <div class="glow absolute -top-20 left-1/2 -translate-x-1/2 w-[640px] h-[640px] pointer-events-none"></div>
+      <div class="relative max-w-6xl mx-auto px-5">
+        <div class="inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-zinc-300 reveal">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>
+          Disponible · Buscando proyecto en Almería
+        </div>
+        <h1 class="mt-6 text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.05] max-w-5xl reveal">
+          Liderando <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand to-amber-300">Operaciones Logísticas a Gran Escala</span> con Ingeniería y Automatización de Software
+        </h1>
+        <p class="mt-6 text-lg sm:text-xl text-zinc-400 max-w-3xl leading-relaxed reveal">
+          Perfil híbrido: dirijo la mayor delegación de España de un Amazon DSP —flotas masivas, decenas de rutas y miles de paquetes al día— y programo en Python y JavaScript las herramientas que eliminan los cuellos de botella reales del tráfico logístico.
+        </p>
+        <div class="mt-9 flex flex-wrap gap-3 reveal">
+          <a href="#proyectos" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-brand text-black font-semibold hover:bg-brand-soft transition">
+            Ver Proyectos Operativos <i data-lucide="arrow-down-right" class="w-4 h-4"></i>
+          </a>
+          <a href="#contacto" class="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/15 bg-white/5 hover:bg-white/10 font-semibold transition">
+            Contactar <i data-lucide="mail" class="w-4 h-4"></i>
+          </a>
+        </div>
+        <div class="mt-12 flex flex-wrap gap-x-6 gap-y-2 text-sm text-zinc-500 reveal">
+          <span class="inline-flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4"></i> Zaragoza → Almería</span>
+          <span class="inline-flex items-center gap-2"><i data-lucide="languages" class="w-4 h-4"></i> Rumano nativo · Español bilingüe</span>
+          <span class="inline-flex items-center gap-2"><i data-lucide="code-2" class="w-4 h-4"></i> DAM · Python · JavaScript</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- KPIs -->
+    <section id="impacto" class="relative py-4">
+      <div class="max-w-6xl mx-auto px-5">
+        <div class="card rounded-2xl grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-white/10 reveal">
+          <div class="p-6 sm:p-8">
+            <i data-lucide="package" class="w-5 h-5 text-brand"></i>
+            <div class="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight">+<span data-count="10000" data-fmt="es">0</span></div>
+            <div class="mt-1 text-sm text-zinc-400">paquetes diarios gestionados</div>
+          </div>
+          <div class="p-6 sm:p-8 border-l border-white/10 lg:border-l-0">
+            <i data-lucide="users" class="w-5 h-5 text-brand"></i>
+            <div class="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight">60–<span data-count="120">0</span></div>
+            <div class="mt-1 text-sm text-zinc-400">conductores coordinados</div>
+          </div>
+          <div class="p-6 sm:p-8">
+            <i data-lucide="award" class="w-5 h-5 text-brand"></i>
+            <div class="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight">&gt;<span data-count="80">0</span>%</div>
+            <div class="mt-1 text-sm text-zinc-400">Scorecard GREAT / FANTASTIC sostenido</div>
+          </div>
+          <div class="p-6 sm:p-8 border-l border-white/10 lg:border-l-0">
+            <i data-lucide="wrench" class="w-5 h-5 text-brand"></i>
+            <div class="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight"><span data-count="4">0</span></div>
+            <div class="mt-1 text-sm text-zinc-400">herramientas creadas y desplegadas en producción</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROYECTOS -->
+    <section id="proyectos" class="py-24 sm:py-32">
+      <div class="max-w-6xl mx-auto px-5">
+        <div class="max-w-2xl reveal">
+          <p class="text-sm font-mono text-brand">// casos de estudio</p>
+          <h2 class="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight">Automatización nacida del suelo de operaciones</h2>
+          <p class="mt-4 text-zinc-400">Cada herramienta resuelve un problema que viví como Jefe de Tráfico. No son demos: se usan a diario en producción. En la primera puedes probar la lógica de auditoría en vivo.</p>
+        </div>
+
+        <div class="mt-12 grid lg:grid-cols-[300px_1fr] gap-6 reveal">
+          <div id="tabList" role="tablist" aria-label="Proyectos" class="flex lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0 -mx-5 px-5 lg:mx-0 lg:px-0"></div>
+          <div id="projectPanel" class="card rounded-2xl p-6 sm:p-8 min-h-[520px]"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPETENCIAS -->
+    <section id="stack" class="py-24 sm:py-32 border-y border-white/5 bg-zinc-950/60">
+      <div class="max-w-6xl mx-auto px-5">
+        <div class="max-w-2xl reveal">
+          <p class="text-sm font-mono text-brand">// competencias híbridas</p>
+          <h2 class="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight">Quien gestiona la flota también escribe el código</h2>
+          <p class="mt-4 text-zinc-400">Entiendo el problema porque lo sufro cada mañana, y sé construir la solución.</p>
+        </div>
+
+        <div class="mt-12 grid md:grid-cols-2 gap-6">
+          <div class="card rounded-2xl p-7 reveal">
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-lg bg-brand/15 text-brand grid place-items-center"><i data-lucide="truck" class="w-5 h-5"></i></span>
+              <h3 class="text-xl font-bold">Logística y Operaciones de Tráfico</h3>
+            </div>
+            <ul class="mt-6 space-y-4 text-zinc-300" id="skillsOps"></ul>
+          </div>
+          <div class="card rounded-2xl p-7 reveal">
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-lg bg-emerald-500/15 text-emerald-400 grid place-items-center"><i data-lucide="terminal-square" class="w-5 h-5"></i></span>
+              <h3 class="text-xl font-bold">Ingeniería y Tecnologías</h3>
+            </div>
+            <ul class="mt-6 space-y-4 text-zinc-300" id="skillsEng"></ul>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-wrap gap-2 reveal" id="chips"></div>
+      </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="py-24">
+      <div class="max-w-4xl mx-auto px-5 text-center reveal">
+        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight">¿Necesitas a alguien que dirija la operación <span class="text-brand">y</span> la automatice?</h2>
+        <p class="mt-5 text-zinc-400 text-lg">Abierto a jefatura de tráfico y logística, y a roles técnicos u operativos de automatización en Almería.</p>
+        <a href="#contacto" class="mt-8 inline-flex items-center gap-2 px-7 py-3.5 rounded-lg bg-brand text-black font-semibold hover:bg-brand-soft transition">Hablemos <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER / CONTACTO -->
+  <footer id="contacto" class="border-t border-white/10 bg-zinc-950">
+    <div class="max-w-6xl mx-auto px-5 py-16">
+      <div class="grid md:grid-cols-2 gap-12">
+        <div>
+          <div class="flex items-center gap-2 font-semibold">
+            <span class="w-7 h-7 rounded-md bg-brand text-black grid place-items-center text-xs font-extrabold">CP</span>
+            Claudiu Mersief Panti
+          </div>
+          <p class="mt-4 text-zinc-400 max-w-md">Responsable de Operaciones y Tráfico Logístico · Desarrollador de Automatizaciones. Rumano nativo, español bilingüe. Disponible para incorporación en Almería.</p>
+          <a href="CV_Claudiu_Mersief_Panti.pdf" download class="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-brand text-black font-semibold hover:bg-brand-soft transition">
+            <i data-lucide="download" class="w-4 h-4"></i> Descargar CV
+          </a>
+        </div>
+        <div class="space-y-3">
+          <a href="https://wa.me/34000000000?text=Hola%20Claudiu,%20he%20visto%20tu%20perfil" target="_blank" rel="noopener" class="flex items-center justify-between gap-4 rounded-xl p-4 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-semibold transition shadow-lg shadow-emerald-500/20">
+            <span class="flex items-center gap-4">
+              <i data-lucide="message-circle" class="w-6 h-6"></i>
+              <span>Iniciar conversación directa<span class="block text-xs font-medium opacity-75">WhatsApp</span></span>
+            </span>
+            <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+          </a>
+          <a href="mailto:TU_EMAIL@ejemplo.com" class="card rounded-xl p-4 flex items-center gap-4 hover:border-brand/50 transition">
+            <i data-lucide="mail" class="w-5 h-5 text-brand"></i>
+            <div><div class="text-xs text-zinc-500">Email</div><div class="font-medium">TU_EMAIL@ejemplo.com</div></div>
+          </a>
+          <a href="tel:+34000000000" class="card rounded-xl p-4 flex items-center gap-4 hover:border-brand/50 transition">
+            <i data-lucide="phone" class="w-5 h-5 text-brand"></i>
+            <div><div class="text-xs text-zinc-500">Teléfono</div><div class="font-medium">+34 000 000 000</div></div>
+          </a>
+          <a href="https://github.com/TU_USUARIO" target="_blank" rel="noopener" class="card rounded-xl p-4 flex items-center gap-4 hover:border-brand/50 transition">
+            <i data-lucide="github" class="w-5 h-5 text-brand"></i>
+            <div><div class="text-xs text-zinc-500">GitHub</div><div class="font-medium">github.com/TU_USUARIO</div></div>
+          </a>
+        </div>
+      </div>
+      <div class="mt-12 pt-6 border-t border-white/5 text-xs text-zinc-500 flex flex-wrap justify-between gap-2">
+        <span>© <span id="year"></span> Claudiu Mersief Panti</span>
+        <span>Hecho a mano con HTML, Tailwind y JavaScript</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+/* ---------- DATA ---------- */
+const projects = [
+  {
+    id: 'cortex', icon: 'layout-dashboard', short: 'Cortex Operations Suite',
+    tag: 'JavaScript · SheetJS · HMAC SHA-256',
+    problem: 'Los comercios cierran a una hora fija y, con cientos de paradas en marcha, es imposible vigilar a mano si cada conductor ha entregado antes del cierre. Una parada que se pasa de hora es un paquete no entregado y una penalización en el Scorecard.',
+    solution: 'El sistema lee el Plan Manifest (SheetJS), extrae el horario de cierre de cada comercio y consulta en tiempo real si la parada ya está entregada. Si no lo está y queda poco margen, la marca en riesgo, cuantifica los paquetes afectados por franja horaria y permite avisar al conductor por WhatsApp con las direcciones y el horario exacto para que las priorice. Peticiones firmadas con HMAC SHA-256 e inyección en vivo sobre Cortex.',
+    stack: ['JavaScript ES2022','SheetJS','Web Crypto (HMAC)','Tampermonkey / GM_*','Live DOM Injection','REST'],
+    results: ['Paquetes en riesgo cuantificados por franja horaria en tiempo real','Aviso al conductor con direcciones y horario exacto en un clic','Paradas de comercio salvadas antes del cierre: menos no entregas y mejor Scorecard'],
+    arch: ['Plan Manifest XLS','Parser SheetJS (cierres)','Estado de entrega en vivo (API firmada)','Panel de paquetes en riesgo','Aviso WhatsApp al conductor'],
+    code: `<span class="tok-c">// Firma de cada petición con la sesión HMAC de Cortex</span>
+<span class="tok-k">async function</span> <span class="tok-f">signReq</span>(method, path, query) {
+  <span class="tok-k">const</span> ts = Date.<span class="tok-f">now</span>().<span class="tok-f">toString</span>();
+  <span class="tok-k">const</span> msg = [method, path, query,
+    <span class="tok-s">'x-cortex-session:'</span> + session.id,
+    <span class="tok-s">'x-cortex-timestamp:'</span> + ts].<span class="tok-f">join</span>(<span class="tok-s">'\\n'</span>);
+  <span class="tok-k">const</span> key = <span class="tok-k">await</span> crypto.subtle.<span class="tok-f">importKey</span>(
+    <span class="tok-s">'raw'</span>, enc.<span class="tok-f">encode</span>(session.key),
+    { name: <span class="tok-s">'HMAC'</span>, hash: <span class="tok-s">'SHA-256'</span> }, <span class="tok-n">false</span>, [<span class="tok-s">'sign'</span>]);
+  <span class="tok-k">return</span> crypto.subtle.<span class="tok-f">sign</span>(<span class="tok-s">'HMAC'</span>, key, enc.<span class="tok-f">encode</span>(msg));
+}`
+  },
+  {
+    id: 'dnr', icon: 'shield-alert', short: 'DNR Tracker & Prevention',
+    tag: 'Jaccard · Estadística · WhatsApp',
+    problem: 'Algunas direcciones concentran de forma recurrente reclamaciones por paquetes no recibidos (DNR). Es difícil anticiparlas ruta a ruta, y una entrega desatendida en ellas suele acabar en reclamación.',
+    solution: 'Mediante algoritmos propios y el análisis estadístico de largos periodos de operación se determinan las direcciones con mayor probabilidad de generar reclamaciones. Al cargar el manifiesto del día, el sistema las localiza en cada ruta y avisa al conductor por WhatsApp: esas entregas se hacen solo en mano al cliente, sin entrega desatendida aunque el cliente la autorice. Un matching difuso (Jaccard) reconoce la misma dirección con grafías distintas.',
+    stack: ['JavaScript','Análisis estadístico','Fuzzy matching (Jaccard)','Google Apps Script','WhatsApp deep-link'],
+    results: ['Entregas de mayor riesgo aseguradas más que el resto de la ruta','Menos reclamaciones al evitar entregas desatendidas en esas direcciones','Seguimiento de los avisos enviados por ruta y conductor'],
+    arch: ['Estadística de largos periodos','Normalización de direcciones','Match por ruta','Aviso WhatsApp al conductor','Seguimiento de avisos'],
+    code: `<span class="tok-c">// Similitud de tokens: intersección / unión</span>
+<span class="tok-k">function</span> <span class="tok-f">tokenSimilarity</span>(a, b) {
+  <span class="tok-k">const</span> ta = <span class="tok-k">new</span> <span class="tok-f">Set</span>(a.<span class="tok-f">split</span>(<span class="tok-s">' '</span>).<span class="tok-f">filter</span>(t => t.length > <span class="tok-n">1</span>));
+  <span class="tok-k">const</span> tb = <span class="tok-k">new</span> <span class="tok-f">Set</span>(b.<span class="tok-f">split</span>(<span class="tok-s">' '</span>).<span class="tok-f">filter</span>(t => t.length > <span class="tok-n">1</span>));
+  <span class="tok-k">let</span> inter = <span class="tok-n">0</span>;
+  ta.<span class="tok-f">forEach</span>(t => { <span class="tok-k">if</span> (tb.<span class="tok-f">has</span>(t)) inter++; });
+  <span class="tok-k">return</span> inter / (ta.size + tb.size - inter);
+}
+<span class="tok-c">// umbral 0.72 → misma dirección, distinta grafía</span>`
+  },
+  {
+    id: 'telematics', icon: 'smartphone', short: 'Fleet Telematics Android Automation',
+    tag: 'Python · ADB · UIAutomator',
+    problem: 'Activar la telemática de decenas de conductores implicaba iniciar sesión, arrancar ruta e introducir el VIN en una app Android por cada cuenta, una a una, a mano, cada día.',
+    solution: 'Orquestador en Python que controla emuladores Android vía ADB: lee las cuentas de un Excel, abre cada app clonada, hace login, detecta pantallas con UIAutomator dump, confirma diálogos, introduce el VIN y reintenta los fallos. Cada emulador procesa su lote en paralelo con los demás.',
+    stack: ['Python','ADB (subprocess)','UIAutomator','openpyxl','LDPlayer · emuladores concurrentes'],
+    results: ['Hasta 120 cuentas procesadas en 4 emuladores concurrentes','Esperas por pantalla en lugar de tiempos fijos → más robusto','Resumen final con fallos y reintento asistido'],
+    arch: ['Excel de cuentas','Reparto por emulador','ADB + UIAutomator','Login · Inicio · VIN','Resumen y reintentos'],
+    code: `<span class="tok-c"># Espera activa a que aparezca un elemento de la UI</span>
+<span class="tok-k">def</span> <span class="tok-f">wait_for_screen</span>(keyword, timeout=<span class="tok-n">30</span>):
+    <span class="tok-k">for</span> _ <span class="tok-k">in</span> <span class="tok-f">range</span>(timeout):
+        dump = <span class="tok-f">get_dump</span>()   <span class="tok-c"># uiautomator dump → XML</span>
+        <span class="tok-k">if</span> dump <span class="tok-k">and</span> keyword <span class="tok-k">in</span> dump:
+            <span class="tok-k">return</span> <span class="tok-n">True</span>
+        time.<span class="tok-f">sleep</span>(<span class="tok-n">1</span>)
+    <span class="tok-k">return</span> <span class="tok-n">False</span>
+
+<span class="tok-c"># Una instancia ADB por emulador: emulator-5554, 5556…</span>
+adb = <span class="tok-k">lambda</span> cmd: subprocess.<span class="tok-f">run</span>(<span class="tok-s">f'"{ADB}" -s {emulator} {cmd}'</span>, shell=<span class="tok-n">True</span>)`
+  },
+  {
+    id: 'monitor', icon: 'radar', short: 'Real-Time Pending Monitor & Route Highlighter',
+    tag: 'REST · Virtual DOM · Mapbox GL',
+    problem: 'El contador de pendientes de Cortex no refleja lo realmente pendiente por ruta, y las paradas con ventana horaria restrictiva se pierden entre cientos de tarjetas y marcadores del mapa.',
+    solution: 'Widget que calcula pendientes reales (recogidos − entregados) consultando las APIs REST de Amazon Logistics, con drill-down a Tracking IDs. Un segundo script escanea la lista virtualizada con MutationObserver y repinta los marcadores SVG del canvas de Mapbox GL para resaltar paradas urgentes, además de un ranking de rutas con TW críticos.',
+    stack: ['JavaScript','REST APIs','MutationObserver','Virtual DOM scanning','Mapbox GL markers (SVG)','GM_xmlhttpRequest'],
+    results: ['Pendientes reales por ruta y por tipo (SA_A / SC_A)','Paradas críticas visibles al instante en lista y mapa','Ranking de rutas por TW urgentes pendientes'],
+    arch: ['route-summaries API','route-details API','Cruce con XLS de TW','Scan DOM virtual','Overlay en mapa y lista'],
+    code: `<span class="tok-c">// Re-aplica el resaltado si Cortex recrea el marcador</span>
+circle._twObserver = <span class="tok-k">new</span> <span class="tok-f">MutationObserver</span>(() => {
+  <span class="tok-k">if</span> (_applying) <span class="tok-k">return</span>;
+  <span class="tok-k">if</span> (circle.<span class="tok-f">getAttribute</span>(<span class="tok-s">'fill'</span>) !== fill) {
+    _applying = <span class="tok-n">true</span>; <span class="tok-f">applyFill</span>(); _applying = <span class="tok-n">false</span>;
+  }
+});
+circle._twObserver.<span class="tok-f">observe</span>(circle, {
+  attributes: <span class="tok-n">true</span>, attributeFilter: [<span class="tok-s">'fill'</span>]
+});`
+  }
+];
+
+/* [titulo, detalle, icono] */
+const skillsOps = [
+  ['Selección integral de personal','Criba curricular, entrevistas telefónicas y presenciales, y contratación.','user-search'],
+  ['Onboarding y formación inicial','Planificación del onboarding, creación de accesos y formación operativa inicial.','user-plus'],
+  ['Captación y homologación de autónomos','Captación de transportistas autónomos, verificación documental y homologación.','file-check-2'],
+  ['Planificación de 50–120 rutas diarias','Ciclo 1, Same-Day y HUB Rural.','route'],
+  ['Auditorías de Amazon Scorecard','>80% de los meses en GREAT / FANTASTIC de forma sostenida.','award'],
+  ['Dirección de equipos y flotas','Hasta 140 personas y 120 conductores coordinados; resolución de incidencias en tiempo real.','users'],
+  ['KPIs y reporting','DPMO, DNR y POD; reporting recurrente al Delivery Station Manager; facturación semanal de colaboradores.','gauge']
+];
+const skillsEng = [
+  ['Python','Automatización, ADB, procesamiento de Excel.','terminal'],
+  ['JavaScript moderno','Userscripts, DOM, APIs REST, Web Crypto.','braces'],
+  ['Google Sheets + Apps Script','Backend ligero y bases de datos distribuidas.','sheet'],
+  ['Datos y algoritmos','Similitud de tokens (Jaccard), normalización y deduplicado.','git-compare'],
+  ['Android','ADB, UIAutomator, emuladores concurrentes.','smartphone'],
+  ['Interfaces','HTML5, CSS y Tailwind para herramientas de operaciones.','layout'],
+  ['Formación DAM','Desarrollo de Aplicaciones Multiplataforma.','graduation-cap']
+];
+const chips = ['Python','JavaScript','SheetJS','Google Apps Script','Google Sheets','ADB','UIAutomator','REST APIs','HMAC / Web Crypto','Mapbox GL','Tailwind CSS','Excel avanzado','Cortex','Amazon Scorecard','DPMO / DNR / POD','Selección y onboarding','Homologación de autónomos','Rumano (nativo)','Español (bilingüe)'];
+
+/* ---------- SIMULADOR: auditoría en tiempo real de cierres de comercio ---------- */
+const RISK_MIN = 60;    // ≤ 60 min al cierre y sin entregar → en riesgo
+const CRIT_MIN = 20;    // ≤ 20 min → crítico
+const DEMO_START = 13 * 60 + 25;
+const DEMO_END = 20 * 60;
+
+/* Manifiesto de ejemplo (datos ficticios) */
+const DEMO_STOPS = [
+  { id: 1,  route: 'CA_A03', driver: 'Lucía M.',  store: 'Tienda Demo Norte',    addr: 'C/ Ejemplo 14',      close: 14*60,    pkgs: 11, status: 'delivered' },
+  { id: 2,  route: 'CA_A03', driver: 'Lucía M.',  store: 'Comercio Demo Centro', addr: 'Av. Muestra 22',     close: 14*60,    pkgs: 8,  status: 'pending' },
+  { id: 3,  route: 'CA_A07', driver: 'Andrés P.', store: 'Tienda Demo Sur',      addr: 'Plaza Ficticia 3',   close: 14*60,    pkgs: 14, status: 'pending' },
+  { id: 4,  route: 'CA_A07', driver: 'Andrés P.', store: 'Comercio Demo Este',   addr: 'C/ Ejemplo 81',      close: 15*60+30, pkgs: 9,  status: 'pending' },
+  { id: 5,  route: 'CA_A11', driver: 'Marta R.',  store: 'Tienda Demo Oeste',    addr: 'Av. Muestra 5',      close: 14*60,    pkgs: 6,  status: 'delivered' },
+  { id: 6,  route: 'CA_A11', driver: 'Marta R.',  store: 'Comercio Demo Plaza',  addr: 'C/ Prueba 40',       close: 15*60+30, pkgs: 12, status: 'pending' },
+  { id: 7,  route: 'CA_A15', driver: 'Iván S.',   store: 'Tienda Demo Puerto',   addr: 'Paseo Ficticio 9',   close: 14*60,    pkgs: 10, status: 'pending' },
+  { id: 8,  route: 'CA_A15', driver: 'Iván S.',   store: 'Comercio Demo Mercado',addr: 'C/ Prueba 7',        close: 18*60,    pkgs: 7,  status: 'pending' },
+  { id: 9,  route: 'CA_A18', driver: 'Sara T.',   store: 'Tienda Demo Parque',   addr: 'C/ Muestra 31',      close: 15*60+30, pkgs: 13, status: 'pending' },
+  { id: 10, route: 'CA_A18', driver: 'Sara T.',   store: 'Comercio Demo Barrio', addr: 'Av. Ejemplo 60',     close: 15*60+30, pkgs: 5,  status: 'delivered' },
+  { id: 11, route: 'CA_A21', driver: 'Pablo L.',  store: 'Tienda Demo Estación', addr: 'C/ Ficticia 2',      close: 18*60,    pkgs: 16, status: 'pending' },
+  { id: 12, route: 'CA_A21', driver: 'Pablo L.',  store: 'Comercio Demo Galería',addr: 'Av. Prueba 11',      close: 20*60,    pkgs: 8,  status: 'pending' }
+];
+
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+const fmtClock = m => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+const fmtLeft = m => (m >= 60 ? `${Math.floor(m / 60)} h ${m % 60 ? (m % 60) + ' min' : ''}`.trim() : `${m} min`);
+
+let sim = null;
+const newSim = () => ({ phase: 'idle', loadStep: 0, now: DEMO_START, stops: DEMO_STOPS.map(s => ({ ...s })), notified: {}, featuredId: null, featNow: DEMO_START });
+
+/* Núcleo de la lógica: ¿en qué estado está la parada respecto al cierre del comercio? */
+function classify(stop, now) {
+  if (stop.status === 'delivered') return 'done';
+  const margin = stop.close - now;
+  if (margin < 0) return 'expired';
+  if (margin <= CRIT_MIN) return 'critical';
+  if (margin <= RISK_MIN) return 'risk';
+  return 'ok';
+}
+
+function simStats() {
+  const now = sim.now;
+  const kpi = { risk: 0, expired: 0, done: 0, saved: 0 };
+  const byClose = {};
+  sim.stops.forEach(s => {
+    const c = classify(s, now);
+    const row = (byClose[s.close] = byClose[s.close] || { close: s.close, done: 0, ok: 0, risk: 0, expired: 0, total: 0 });
+    row.total += s.pkgs;
+    if (c === 'done') { row.done += s.pkgs; kpi.done += s.pkgs; if (s.saved) kpi.saved += s.pkgs; }
+    else if (c === 'ok') row.ok += s.pkgs;
+    else if (c === 'expired') { row.expired += s.pkgs; kpi.expired += s.pkgs; }
+    else { row.risk += s.pkgs; kpi.risk += s.pkgs; }
+  });
+  return { kpi, rows: Object.values(byClose).sort((a, b) => a.close - b.close) };
+}
+
+function atRiskStops(route) {
+  return sim.stops.filter(s => s.route === route && ['risk', 'critical'].includes(classify(s, sim.now)));
+}
+
+function buildMsg(route, stops) {
+  const driver = stops[0].driver;
+  const lines = stops.map((s, i) => `${i + 1}. ${s.store} · ${s.addr}\n   Cierra a las ${fmtClock(s.close)} (quedan ${fmtLeft(s.close - sim.now)}) · ${s.pkgs} paquetes`);
+  return `${route} · ${driver}\n⚠️ ENTREGAS PRIORITARIAS: comercios que cierran pronto\n\n${lines.join('\n\n')}\n\nPlanifica la ruta para entregarlas antes del cierre y priorízalas respecto al resto. Gracias.`;
+}
+
+function notifyRoute(route) {
+  if (sim.notified[route]) return;
+  const stops = atRiskStops(route);
+  if (!stops.length) return;
+  sim.notified[route] = { ids: stops.map(s => s.id), msg: buildMsg(route, stops), at: sim.now, state: 'sent' };
+  renderSim();
+  setTimeout(() => {
+    if (!sim || !sim.notified[route]) return;
+    stops.forEach(s => { s.status = 'delivered'; s.saved = true; s.deliveredAt = Math.max(sim.now, Math.min(sim.now + 12, s.close - 2)); });
+    sim.notified[route].state = 'saved';
+    renderSim();
+  }, 2200);
+}
+
+function startLoad() {
+  sim.phase = 'loading';
+  sim.loadStep = 0;
+  renderSim();
+  const timer = setInterval(() => {
+    if (!sim) return clearInterval(timer);
+    sim.loadStep++;
+    if (sim.loadStep >= 3) {
+      clearInterval(timer);
+      sim.phase = 'ready';
+      // Caso destacado: la parada pendiente más urgente (menor margen; a igualdad, más paquetes)
+      const cand = sim.stops.filter(s => ['risk', 'critical'].includes(classify(s, sim.now)))
+        .sort((a, b) => (a.close - b.close) || (b.pkgs - a.pkgs));
+      sim.featuredId = cand.length ? cand[0].id : null;
+      sim.featNow = sim.now;
+    }
+    renderSim();
+  }, 750);
+}
+
+function simulatorHTML() {
+  return `<div id="simRoot"></div>`;
+}
+
+function renderSim() {
+  const root = document.getElementById('simRoot');
+  if (!root || !sim) return;
+  root.onclick = e => {
+    const el = e.target.closest('[data-action]');
+    if (!el) return;
+    const a = el.dataset.action;
+    if (a === 'load') startLoad();
+    if (a === 'advance') { sim.now = Math.min(sim.now + 15, DEMO_END); renderSim(); }
+    if (a === 'reset') { sim = newSim(); renderSim(); }
+    if (a === 'notify') notifyRoute(el.dataset.route);
+  };
+
+  if (sim.phase === 'idle') {
+    root.innerHTML = `
+    <div class="fade-in">
+      <div class="grid sm:grid-cols-3 gap-3">
+        ${[['file-spreadsheet','1 · Subes el manifiesto','El sistema extrae el horario de cierre de cada comercio.'],
+           ['radar','2 · Comprueba en vivo','Consulta si el conductor ya ha entregado cada parada.'],
+           ['bell-ring','3 · Avisa a tiempo','Cuantifica paquetes en riesgo y avisa por WhatsApp para que prioricen.']]
+          .map(([ic,t,d]) => `<div class="rounded-xl border border-white/10 bg-white/[0.03] p-4"><i data-lucide="${ic}" class="w-5 h-5 text-brand"></i><div class="mt-2 text-sm font-semibold text-white">${t}</div><div class="mt-1 text-xs text-zinc-400 leading-relaxed">${d}</div></div>`).join('')}
+      </div>
+      <div class="mt-5 rounded-xl border border-dashed border-white/15 p-8 text-center">
+        <i data-lucide="upload-cloud" class="w-8 h-8 mx-auto text-zinc-500"></i>
+        <p class="mt-3 text-sm text-zinc-400">No hay que introducir nada: el sistema trabaja directamente sobre el manifiesto.</p>
+        <button data-action="load" class="mt-5 inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-brand text-black font-semibold hover:bg-brand-soft transition"><i data-lucide="file-up" class="w-4 h-4"></i> Cargar manifiesto de ejemplo</button>
+        <p class="mt-3 text-[11px] text-zinc-600">Demo con datos ficticios.</p>
+      </div>
+    </div>`;
+    lucide.createIcons();
+    return;
+  }
+
+  if (sim.phase === 'loading') {
+    const steps = ['Leyendo Plan Manifest (XLS)…', 'Extrayendo horarios de cierre de comercios…', 'Cruzando con el estado de entrega en tiempo real…'];
+    root.innerHTML = `
+    <div class="fade-in rounded-xl border border-white/10 bg-white/[0.03] p-6">
+      <div class="flex items-center gap-3 text-sm font-semibold text-white"><i data-lucide="loader-circle" class="w-4 h-4 text-brand animate-spin"></i> Procesando DZG2_manifiesto_ejemplo.xls</div>
+      <ul class="mt-4 space-y-2 text-sm">
+        ${steps.map((t, i) => `<li class="flex items-center gap-2 ${i < sim.loadStep ? 'text-emerald-400' : i === sim.loadStep ? 'text-zinc-200' : 'text-zinc-600'}"><i data-lucide="${i < sim.loadStep ? 'check' : 'circle-dot'}" class="w-4 h-4"></i>${t}</li>`).join('')}
+      </ul>
+    </div>`;
+    lucide.createIcons();
+    return;
+  }
+
+  /* ---- phase: ready ---- */
+  const { kpi, rows } = simStats();
+  const totalStopsAtShops = sim.stops.length;
+
+  const kpiCards = [
+    ['Paquetes en riesgo', kpi.risk, 'text-amber-300', 'border-amber-500/40 bg-amber-500/10', 'triangle-alert'],
+    ['Cierres vencidos', kpi.expired, 'text-red-300', 'border-red-500/40 bg-red-500/10', 'octagon-alert'],
+    ['Entregados', kpi.done, 'text-emerald-300', 'border-emerald-500/40 bg-emerald-500/10', 'package-check'],
+    ['Salvados con aviso', kpi.saved, 'text-brand', 'border-brand/40 bg-brand/10', 'life-buoy']
+  ].map(([l, v, tc, bc, ic]) => `<div class="rounded-xl border ${bc} p-4"><div class="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider ${tc}"><i data-lucide="${ic}" class="w-3.5 h-3.5"></i>${l}</div><div class="mt-2 text-3xl font-extrabold text-white">${v}</div></div>`).join('');
+
+  const bars = rows.map(r => {
+    const p = n => (r.total ? (n / r.total) * 100 : 0).toFixed(1);
+    return `<div>
+      <div class="flex items-center justify-between text-xs mb-1.5">
+        <span class="font-mono text-zinc-300">Cierre ${fmtClock(r.close)}</span>
+        <span class="${r.risk ? 'text-amber-300 font-semibold' : r.expired ? 'text-red-300 font-semibold' : 'text-zinc-500'}">${r.risk ? r.risk + ' en riesgo' : r.expired ? r.expired + ' vencidos' : 'sin riesgo'} <span class="text-zinc-500 font-normal">· ${r.total} paq.</span></span>
+      </div>
+      <div class="flex h-2.5 rounded-full overflow-hidden bg-white/5">
+        <span style="width:${p(r.done)}%;background:#10b981"></span>
+        <span style="width:${p(r.ok)}%;background:#52525b"></span>
+        <span style="width:${p(r.risk)}%;background:#f59e0b"></span>
+        <span style="width:${p(r.expired)}%;background:#ef4444"></span>
+      </div>
+    </div>`;
+  }).join('');
+
+  /* Caso destacado */
+  let featured = '';
+  const f = sim.stops.find(s => s.id === sim.featuredId);
+  if (f) {
+    const n = sim.notified[f.route];
+    const notified = !!n;
+    const saved = f.saved;
+    const cls = classify(f, sim.now);
+    const left0 = f.close - sim.featNow;
+    const step = (done, title, sub) => `<li class="flex gap-3"><span class="mt-0.5 w-5 h-5 shrink-0 rounded-full grid place-items-center ${done ? 'bg-emerald-500 text-black' : 'border border-white/20 text-zinc-600'}"><i data-lucide="${done ? 'check' : 'circle'}" class="w-3 h-3"></i></span><span class="${done ? 'text-zinc-100' : 'text-zinc-500'} text-sm">${title}<span class="block text-xs ${done ? 'text-zinc-400' : 'text-zinc-600'}">${sub}</span></span></li>`;
+    const btn = saved ? '' : notified
+      ? `<div class="mt-4 inline-flex items-center gap-2 text-sm text-amber-300"><i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> Aviso enviado, esperando entrega…</div>`
+      : cls === 'expired'
+        ? `<div class="mt-4 text-sm text-red-300">El comercio ya ha cerrado: parada vencida.</div>`
+        : `<button data-action="notify" data-route="${f.route}" class="mt-4 inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-emerald-500 text-emerald-950 font-semibold text-sm hover:bg-emerald-400 transition"><i data-lucide="message-circle" class="w-4 h-4"></i> Avisar al conductor por WhatsApp</button>`;
+    featured = `
+    <div class="mt-6 rounded-xl border border-brand/30 bg-gradient-to-br from-brand/10 to-transparent p-5">
+      <div class="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-brand"><i data-lucide="target" class="w-3.5 h-3.5"></i> Caso real simulado · parada a punto de cerrar</div>
+      <div class="mt-3 grid sm:grid-cols-2 gap-5">
+        <div class="rounded-lg bg-black/30 border border-white/10 p-4 text-sm">
+          <div class="flex justify-between"><span class="font-mono text-brand font-semibold">${f.route}</span><span class="text-zinc-400">${esc(f.driver)}</span></div>
+          <div class="mt-2 font-semibold text-white">${esc(f.store)}</div>
+          <div class="text-zinc-400">${esc(f.addr)}</div>
+          <div class="mt-3 flex flex-wrap gap-2 text-xs">
+            <span class="px-2 py-1 rounded-md bg-white/5 border border-white/10">Cierre <b class="text-white">${fmtClock(f.close)}</b></span>
+            <span class="px-2 py-1 rounded-md bg-white/5 border border-white/10"><b class="text-white">${f.pkgs}</b> paquetes</span>
+            <span class="px-2 py-1 rounded-md border ${saved ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300' : 'bg-amber-500/10 border-amber-500/40 text-amber-300'}">${saved ? 'Entregada ' + fmtClock(f.deliveredAt) : cls === 'expired' ? 'Vencida' : 'Pendiente · quedan ' + fmtLeft(f.close - sim.now)}</span>
+          </div>
+          ${btn}
+        </div>
+        <ol class="space-y-3">
+          ${step(true, `${fmtClock(sim.featNow)} · Parada detectada sin entregar`, `Cierra a las ${fmtClock(f.close)}: quedaban ${fmtLeft(left0)}`)}
+          ${step(notified, 'Aviso por WhatsApp al conductor', 'Con la dirección y el horario exacto de cierre')}
+          ${step(saved, 'El conductor prioriza la parada', 'La adelanta respecto al resto de la ruta')}
+          ${step(saved, saved ? `Entregada a las ${fmtClock(f.deliveredAt)}, antes del cierre` : 'Entrega dentro de horario', saved ? `No entrega evitada: ${f.pkgs} paquetes salvados` : 'Se evita la no entrega y la penalización en Scorecard')}
+        </ol>
+      </div>
+    </div>`;
+  }
+
+  /* Conductores a avisar */
+  const routes = [...new Set(sim.stops.map(s => s.route))].filter(r => sim.notified[r] || atRiskStops(r).length);
+  const drivers = routes.length ? routes.map(r => {
+    const n = sim.notified[r];
+    const stops = n ? sim.stops.filter(s => n.ids.includes(s.id)) : atRiskStops(r);
+    const driver = stops[0].driver;
+    const state = !n
+      ? `<button data-action="notify" data-route="${r}" class="shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-emerald-500 text-emerald-950 font-semibold text-xs hover:bg-emerald-400 transition"><i data-lucide="message-circle" class="w-4 h-4"></i> Avisar por WhatsApp</button>`
+      : n.state === 'sent'
+        ? `<span class="shrink-0 inline-flex items-center gap-2 text-xs text-amber-300"><i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> Aviso enviado</span>`
+        : `<span class="shrink-0 inline-flex items-center gap-2 text-xs text-emerald-300 font-semibold"><i data-lucide="circle-check-big" class="w-4 h-4"></i> Entregado a tiempo</span>`;
+    const bubble = n ? `
+      <div class="mt-3 rounded-lg rounded-tl-none bg-emerald-900/40 border border-emerald-500/20 p-3 text-xs text-zinc-200 whitespace-pre-wrap leading-relaxed">${esc(n.msg)}</div>
+      <a href="https://wa.me/?text=${encodeURIComponent(n.msg)}" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1.5 text-[11px] text-emerald-400 hover:text-emerald-300"><i data-lucide="external-link" class="w-3 h-3"></i> Abrir en WhatsApp</a>` : '';
+    return `<div class="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+      <div class="flex items-start justify-between gap-3">
+        <div class="min-w-0">
+          <div class="text-sm"><span class="font-mono font-semibold text-brand">${r}</span> <span class="text-zinc-400">· ${esc(driver)}</span></div>
+          <ul class="mt-2 space-y-1.5">
+            ${stops.map(s => `<li class="text-xs text-zinc-300">${esc(s.store)} · ${esc(s.addr)} <span class="text-zinc-500">— cierra ${fmtClock(s.close)} · ${s.pkgs} paq.</span> ${s.saved ? '<span class="text-emerald-400">✓ ' + fmtClock(s.deliveredAt) + '</span>' : `<span class="${classify(s, sim.now) === 'critical' ? 'text-red-300' : 'text-amber-300'} font-semibold">quedan ${fmtLeft(s.close - sim.now)}</span>`}</li>`).join('')}
+          </ul>
+        </div>
+        ${state}
+      </div>
+      ${bubble}
+    </div>`;
+  }).join('') : `<div class="rounded-xl border border-dashed border-white/10 p-5 text-center text-sm text-zinc-500">No hay conductores con paradas en riesgo en este momento.</div>`;
+
+  root.innerHTML = `
+  <div class="fade-in">
+    <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
+      <div class="text-xs text-zinc-400"><i data-lucide="file-spreadsheet" class="w-4 h-4 inline -mt-0.5 text-emerald-400"></i> <span class="font-mono text-zinc-200">DZG2_manifiesto_ejemplo.xls</span> · ${totalStopsAtShops} paradas de comercio · hora simulada <span class="font-mono font-semibold text-white">${fmtClock(sim.now)}</span></div>
+      <div class="flex gap-2">
+        <button data-action="advance" ${sim.now >= DEMO_END ? 'disabled' : ''} class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition disabled:opacity-40"><i data-lucide="fast-forward" class="w-3.5 h-3.5"></i> +15 min</button>
+        <button data-action="reset" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reiniciar</button>
+      </div>
+    </div>
+
+    <div class="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-3">${kpiCards}</div>
+
+    <div class="mt-6 rounded-xl border border-white/10 bg-white/[0.03] p-5">
+      <h5 class="text-sm font-semibold text-white">Paquetes en riesgo por horario de cierre</h5>
+      <div class="mt-4 space-y-4">${bars}</div>
+      <div class="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-zinc-500">
+        <span><i class="inline-block w-2 h-2 rounded-full mr-1.5" style="background:#10b981"></i>Entregado</span>
+        <span><i class="inline-block w-2 h-2 rounded-full mr-1.5" style="background:#52525b"></i>Pendiente con margen</span>
+        <span><i class="inline-block w-2 h-2 rounded-full mr-1.5" style="background:#f59e0b"></i>En riesgo (≤ ${RISK_MIN} min)</span>
+        <span><i class="inline-block w-2 h-2 rounded-full mr-1.5" style="background:#ef4444"></i>Cierre vencido</span>
+      </div>
+    </div>
+
+    ${featured}
+
+    <h5 class="mt-8 text-sm font-semibold text-white flex items-center gap-2"><i data-lucide="send" class="w-4 h-4 text-emerald-400"></i> Avisos a conductores</h5>
+    <p class="mt-1 text-xs text-zinc-500">Cada mensaje incluye las direcciones y el horario exacto de cierre para que planifiquen la ruta.</p>
+    <div class="mt-3 space-y-3">${drivers}</div>
+    <p class="mt-4 text-[11px] text-zinc-600">Demo con datos ficticios. Pulsa «+15 min» para ver cómo evoluciona el riesgo si nadie avisa.</p>
+  </div>`;
+  lucide.createIcons();
+}
+
+function bindSimulator() {
+  if (!sim) sim = newSim();
+  renderSim();
+}
+
+/* ================= DEMOS: DNR · Telematics · Monitor ================= */
+const demoTimers = new Set();
+const later = (fn, ms) => { const t = setTimeout(() => { demoTimers.delete(t); fn(); }, ms); demoTimers.add(t); return t; };
+const every = (fn, ms) => { const t = setInterval(fn, ms); demoTimers.add(t); return t; };
+const stopTimer = t => { clearTimeout(t); clearInterval(t); demoTimers.delete(t); };
+const clearDemoTimers = () => { demoTimers.forEach(t => { clearTimeout(t); clearInterval(t); }); demoTimers.clear(); };
+const nowClock = () => new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+/* ---------- DNR: panel de rutas con direcciones conflictivas (solo recuento) ---------- */
+const DNR_ROUTES = [
+  { route: 'CA_A03', driver: 'Lucía M.',  stops: 118, flag: 4 },
+  { route: 'CA_A07', driver: 'Andrés P.', stops: 104, flag: 7 },
+  { route: 'CA_A11', driver: 'Marta R.',  stops: 126, flag: 2 },
+  { route: 'CA_A15', driver: 'Iván S.',   stops: 97,  flag: 5 },
+  { route: 'CA_A18', driver: 'Sara T.',   stops: 111, flag: 0 },
+  { route: 'CA_A21', driver: 'Pablo L.',  stops: 132, flag: 9 },
+  { route: 'CA_A24', driver: 'Elena V.',  stops: 109, flag: 3 },
+  { route: 'CA_A28', driver: 'Marcos D.', stops: 121, flag: 6 }
+];
+const DNR_STEPS = ['Leyendo manifiesto del día', 'Normalizando direcciones', 'Cruzando con estadística de largos periodos'];
+let dnrSt = null;
+const newDnr = () => ({ phase: 'idle', step: 0, sent: {}, last: null });
+
+function dnrMsg(r) {
+  const lines = Array.from({ length: r.flag }, (_, i) => `📍 ${i + 1}. [Dirección ${i + 1} del manifiesto]`).join('\n');
+  return `${r.route} · ${r.driver}\n⚠️ ${r.flag} ${r.flag === 1 ? 'entrega' : 'entregas'} de tu ruta SOLO EN MANO al cliente.\n\n${lines}\n\nNo las dejes desatendidas aunque el cliente autorice no estar presente.`;
+}
+
+function dnrHTML() { return `<div id="dnrRoot"></div>`; }
+
+function renderDnr() {
+  const root = document.getElementById('dnrRoot');
+  if (!root || !dnrSt) return;
+  const s = dnrSt;
+  root.onclick = e => {
+    const el = e.target.closest('[data-a]');
+    if (!el) return;
+    const a = el.dataset.a;
+    if (a === 'scan') dnrScan();
+    if (a === 'reset') { dnrSt = newDnr(); renderDnr(); }
+    if (a === 'send') dnrSend(el.dataset.r);
+    if (a === 'all') DNR_ROUTES.filter(r => r.flag > 0 && !s.sent[r.route]).forEach((r, i) => later(() => dnrSend(r.route), i * 500));
+  };
+  const card = 'rounded-xl border border-white/10 bg-white/[0.03]';
+  if (s.phase === 'idle') {
+    root.innerHTML = `<div class="${card} p-5 fade-in">
+      <div class="flex items-start gap-3"><i data-lucide="file-up" class="w-5 h-5 text-brand mt-0.5 shrink-0"></i>
+        <div><p class="text-sm text-zinc-300 leading-relaxed">Simula la carga del manifiesto del día. El sistema cruza cada ruta con el análisis estadístico propio y devuelve, <strong class="text-white">por ruta, cuántas direcciones son potencialmente conflictivas</strong>. El panel muestra solo recuentos, no direcciones.</p>
+        <button data-a="scan" class="mt-4 inline-flex items-center gap-2 bg-brand text-zinc-950 font-semibold text-sm px-4 py-2.5 rounded-lg hover:brightness-110 transition"><i data-lucide="upload" class="w-4 h-4"></i> Cargar manifiesto de ejemplo</button></div></div></div>`;
+  } else if (s.phase === 'loading') {
+    root.innerHTML = `<div class="${card} p-5 space-y-3 fade-in">${DNR_STEPS.map((t, i) => `
+      <div class="flex items-center gap-3 text-sm ${i <= s.step ? 'text-zinc-200' : 'text-zinc-600'}">
+        <i data-lucide="${i < s.step ? 'check-circle-2' : i === s.step ? 'loader-2' : 'circle'}" class="w-4 h-4 ${i < s.step ? 'text-emerald-400' : i === s.step ? 'text-brand animate-spin' : ''}"></i>${t}</div>`).join('')}</div>`;
+  } else {
+    const total = DNR_ROUTES.reduce((a, r) => a + r.flag, 0);
+    const secured = DNR_ROUTES.reduce((a, r) => a + (s.sent[r.route] === 'sent' ? r.flag : 0), 0);
+    const warned = Object.values(s.sent).filter(v => v === 'sent').length;
+    const withFlag = DNR_ROUTES.filter(r => r.flag > 0).length;
+    const maxF = Math.max(...DNR_ROUTES.map(r => r.flag));
+    const kpi = (v, l, c) => `<div class="${card} p-3"><p class="text-2xl font-bold ${c}">${v}</p><p class="text-[11px] text-zinc-500 mt-0.5">${l}</p></div>`;
+    const rows = DNR_ROUTES.map(r => {
+      const st = s.sent[r.route];
+      const btn = r.flag === 0
+        ? `<span class="text-[11px] text-zinc-600 font-mono">Sin avisos</span>`
+        : st === 'sent' ? `<span class="inline-flex items-center gap-1.5 text-xs text-emerald-400 font-semibold"><i data-lucide="check-check" class="w-4 h-4"></i> Enviado</span>`
+        : st === 'sending' ? `<span class="inline-flex items-center gap-1.5 text-xs text-zinc-400"><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Enviando…</span>`
+        : `<button data-a="send" data-r="${r.route}" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-500/90 text-zinc-950 hover:bg-emerald-400 transition"><i data-lucide="send" class="w-3.5 h-3.5"></i> Enviar direcciones</button>`;
+      const w = r.flag ? Math.max(8, Math.round(r.flag / maxF * 100)) : 0;
+      return `<div class="grid grid-cols-[auto_1fr_auto] sm:grid-cols-[84px_1fr_150px_auto] items-center gap-x-3 gap-y-1 px-3.5 py-3 border-t border-white/5">
+        <span class="font-mono text-xs text-zinc-300">${r.route}</span>
+        <span class="text-xs text-zinc-400">${esc(r.driver)} <span class="text-zinc-600">· ${r.stops} paradas</span></span>
+        <div class="hidden sm:flex items-center gap-2"><div class="flex-1 h-1.5 rounded-full bg-white/5 overflow-hidden"><div class="h-full rounded-full ${r.flag >= 6 ? 'bg-red-500' : r.flag >= 3 ? 'bg-brand' : 'bg-yellow-400'}" style="width:${w}%"></div></div><span class="text-sm font-bold tabular-nums w-5 text-right ${r.flag ? 'text-white' : 'text-zinc-600'}">${r.flag}</span></div>
+        <div class="text-right">${btn}</div></div>`;
+    }).join('');
+    const bubble = s.last ? `<div class="rounded-2xl rounded-tl-sm bg-emerald-900/40 border border-emerald-500/20 p-3.5 text-[12.5px] text-emerald-50 leading-relaxed whitespace-pre-line fade-in">${esc(s.last.msg)}<div class="mt-2 text-[10px] text-emerald-300/70 text-right">${s.last.at} ✓✓</div></div>`
+      : `<p class="text-xs text-zinc-600 text-center py-8">Pulsa «Enviar direcciones» para simular el aviso por WhatsApp.</p>`;
+    root.innerHTML = `<div class="fade-in space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <p class="text-xs font-mono text-zinc-500"><i data-lucide="file-check-2" class="w-3.5 h-3.5 inline -mt-0.5 text-emerald-400"></i> manifiesto_demo.xlsx · ${DNR_ROUTES.length} rutas analizadas</p>
+        <div class="flex gap-2">
+          <button data-a="all" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/15 text-zinc-200 hover:bg-white/5 transition"><i data-lucide="send" class="w-3.5 h-3.5"></i> Avisar a todos</button>
+          <button data-a="reset" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/10 text-zinc-400 hover:text-white transition"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reiniciar</button>
+        </div></div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">${kpi(total, 'Direcciones de riesgo', 'text-brand')}${kpi(withFlag + '/' + DNR_ROUTES.length, 'Rutas con avisos', 'text-white')}${kpi(warned, 'Conductores avisados', 'text-emerald-400')}${kpi(secured, 'Entregas aseguradas', 'text-emerald-400')}</div>
+      <div class="grid lg:grid-cols-5 gap-4">
+        <div class="lg:col-span-3 ${card} overflow-hidden">
+          <div class="px-3.5 py-2.5 text-[11px] uppercase tracking-wider font-semibold text-zinc-500 flex justify-between"><span>Ruta · direcciones potencialmente conflictivas</span></div>${rows}</div>
+        <div class="lg:col-span-2 ${card} p-4">
+          <p class="text-[11px] uppercase tracking-wider font-semibold text-zinc-500 flex items-center gap-2"><i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-400"></i> Vista del mensaje al conductor</p>
+          <div class="mt-3">${bubble}</div>
+          <p class="mt-3 text-[10.5px] text-zinc-600 leading-relaxed">Demo con datos ficticios: en el mensaje real el conductor recibe las direcciones concretas de su ruta.</p></div>
+      </div></div>`;
+  }
+  lucide.createIcons();
+}
+
+function dnrScan() {
+  dnrSt.phase = 'loading'; dnrSt.step = 0; renderDnr();
+  const t = every(() => {
+    if (!dnrSt) return stopTimer(t);
+    dnrSt.step++;
+    if (dnrSt.step >= DNR_STEPS.length) { stopTimer(t); dnrSt.phase = 'ready'; }
+    renderDnr();
+  }, 750);
+}
+
+function dnrSend(route) {
+  const r = DNR_ROUTES.find(x => x.route === route);
+  if (!r || !r.flag || dnrSt.sent[route]) return;
+  dnrSt.sent[route] = 'sending'; renderDnr();
+  later(() => {
+    if (!dnrSt) return;
+    dnrSt.sent[route] = 'sent';
+    dnrSt.last = { msg: dnrMsg(r), at: nowClock() };
+    renderDnr();
+  }, 1100);
+}
+
+function bindDnr() { if (!dnrSt) dnrSt = newDnr(); renderDnr(); }
+
+/* ---------- TELEMATICS: login y apertura de viajes de mentor en 4 emuladores ---------- */
+const EMU_N = 4, ACC_PER = 30;
+const TEL_STEPS = ['Iniciando sesión', 'Abriendo viaje de mentor', 'Confirmando viaje'];
+let telSt = null;
+const newTel = () => ({
+  running: false, done: false, timer: null, logs: [], retries: 0,
+  emus: Array.from({ length: EMU_N }, (_, e) => ({ idx: 0, step: 0, status: Array(ACC_PER).fill('pending'), failed: false, e }))
+});
+
+function telLog(msg, cls) {
+  telSt.logs.push({ t: nowClock(), msg, cls: cls || 'text-zinc-400' });
+  if (telSt.logs.length > 7) telSt.logs.shift();
+}
+const telAcc = (e, i) => `cuenta_${String(e * ACC_PER + i + 1).padStart(3, '0')}`;
+const telDone = () => telSt.emus.reduce((a, m) => a + m.status.filter(x => x === 'done').length, 0);
+
+function telTick() {
+  const s = telSt;
+  s.emus.forEach(m => {
+    if (m.idx >= ACC_PER) return;
+    if (m.status[m.idx] === 'pending') { m.status[m.idx] = 'active'; m.step = 0; telLog(`[emu-${5554 + m.e * 2}] ${telAcc(m.e, m.idx)} · iniciando sesión`); return; }
+    // fallo simulado y reintento (una vez)
+    if (m.e === 2 && m.idx === 17 && m.step === 1 && !m.failed) {
+      m.failed = true; s.retries++;
+      telLog(`[emu-${5554 + m.e * 2}] ${telAcc(m.e, m.idx)} · pantalla no detectada → reintento`, 'text-brand');
+      m.step = 0; return;
+    }
+    m.step++;
+    if (m.step < TEL_STEPS.length) telLog(`[emu-${5554 + m.e * 2}] ${telAcc(m.e, m.idx)} · ${TEL_STEPS[m.step].toLowerCase()}`);
+    else { telLog(`[emu-${5554 + m.e * 2}] ${telAcc(m.e, m.idx)} · viaje de mentor abierto ✓`, 'text-emerald-400'); m.status[m.idx] = 'done'; m.idx++; m.step = 0; }
+  });
+  if (telDone() >= EMU_N * ACC_PER) {
+    stopTimer(s.timer); s.running = false; s.done = true;
+    telLog(`Resumen: ${EMU_N * ACC_PER}/${EMU_N * ACC_PER} cuentas correctas · ${s.retries} reintento`, 'text-emerald-400');
+    return renderTel();
+  }
+  telUpdate();
+}
+
+/* Actualización incremental: solo cambian barra, casillas, estado por emulador y consola */
+function telCur(m) {
+  const act = m.idx < ACC_PER ? m.idx : null;
+  return act === null ? 'Completado' : `${telAcc(m.e, act)} · ${telSt.running || m.status[act] === 'active' ? TEL_STEPS[m.step] : 'En espera'}`;
+}
+function telLogHTML() {
+  return telSt.logs.length ? telSt.logs.map(l => `<div><span class="text-zinc-600">${l.t}</span> <span class="${l.cls}">${esc(l.msg)}</span></div>`).join('') : '<span class="text-zinc-600">$ esperando inicio…</span>';
+}
+const TEL_DOT = { done: 'bg-emerald-500', active: 'bg-brand animate-pulse', pending: 'bg-white/10' };
+function telUpdate() {
+  const s = telSt, total = EMU_N * ACC_PER, done = telDone(), pct = Math.round(done / total * 100);
+  const bar = document.getElementById('telBar');
+  if (!bar) return;
+  bar.style.width = pct + '%';
+  document.getElementById('telPct').textContent = `${done}/${total} · ${pct}%`;
+  s.emus.forEach(m => {
+    document.getElementById('telCur' + m.e).textContent = telCur(m);
+    document.getElementById('telCnt' + m.e).textContent = `${m.status.filter(x => x === 'done').length}/${ACC_PER}`;
+    const dots = document.getElementById('telDots' + m.e).children;
+    m.status.forEach((x, i) => { const c = 'aspect-square rounded-[3px] ' + TEL_DOT[x]; if (dots[i].dataset.s !== x) { dots[i].className = c; dots[i].dataset.s = x; } });
+  });
+  document.getElementById('telLog').innerHTML = telLogHTML();
+}
+
+function telHTML() { return `<div id="telRoot"></div>`; }
+
+function renderTel() {
+  const root = document.getElementById('telRoot');
+  if (!root || !telSt) return;
+  const s = telSt, total = EMU_N * ACC_PER, done = telDone(), pct = Math.round(done / total * 100);
+  root.onclick = e => {
+    const el = e.target.closest('[data-a]');
+    if (!el) return;
+    if (el.dataset.a === 'start' && !s.running) {
+      if (s.done) { telSt = newTel(); return telStart(); }
+      telStart();
+    }
+    if (el.dataset.a === 'reset') { stopTimer(s.timer); telSt = newTel(); renderTel(); }
+  };
+  const card = 'rounded-xl border border-white/10 bg-white/[0.03]';
+  const emus = s.emus.map(m => {
+    const act = m.idx < ACC_PER ? m.idx : null;
+    const cur = telCur(m);
+    const d = m.status.filter(x => x === 'done').length;
+    return `<div class="${card} p-3.5">
+      <div class="flex items-center justify-between"><span class="text-xs font-semibold text-zinc-200 flex items-center gap-2"><i data-lucide="smartphone" class="w-3.5 h-3.5 text-brand"></i> LDPlayer #${m.e + 1}</span><span id="telCnt${m.e}" class="text-[11px] font-mono text-zinc-500">${d}/${ACC_PER}</span></div>
+      <p id="telCur${m.e}" class="mt-2 text-[11px] font-mono truncate text-zinc-400">${cur}</p>
+      <div id="telDots${m.e}" class="mt-3 grid grid-cols-10 gap-1">${m.status.map(x => `<span data-s="${x}" class="aspect-square rounded-[3px] ${TEL_DOT[x]}"></span>`).join('')}</div></div>`;
+  }).join('');
+  root.innerHTML = `<div class="space-y-4 fade-in">
+    <div class="${card} p-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div><p class="text-sm font-semibold text-white">${s.done ? 'Proceso completado' : s.running ? 'Procesando cuentas…' : 'Orquestador listo'}</p>
+          <p class="text-[11px] font-mono text-zinc-500">cuentas.xlsx · ${total} cuentas · ${EMU_N} emuladores concurrentes</p></div>
+        <div class="flex gap-2">
+          <button data-a="start" ${s.running ? 'disabled' : ''} class="inline-flex items-center gap-2 bg-brand text-zinc-950 font-semibold text-sm px-4 py-2 rounded-lg hover:brightness-110 transition disabled:opacity-40 disabled:cursor-not-allowed"><i data-lucide="${s.done ? 'rotate-ccw' : 'play'}" class="w-4 h-4"></i> ${s.done ? 'Repetir' : 'Iniciar automatización'}</button>
+          ${(s.running || s.done || done) ? `<button data-a="reset" class="text-xs font-semibold px-3 py-2 rounded-lg border border-white/10 text-zinc-400 hover:text-white transition">Reiniciar</button>` : ''}</div></div>
+      <div class="mt-4 flex items-center gap-3"><div class="flex-1 h-2.5 rounded-full bg-white/5 overflow-hidden"><div id="telBar" class="h-full rounded-full bg-gradient-to-r from-brand to-emerald-400 transition-all duration-200" style="width:${pct}%"></div></div><span id="telPct" class="font-mono text-sm font-bold tabular-nums text-white w-28 text-right">${done}/${total} · ${pct}%</span></div></div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">${emus}</div>
+    <div id="telLog" class="code-block rounded-xl p-3.5 font-mono text-[11.5px] leading-relaxed min-h-[150px]">${telLogHTML()}</div></div>`;
+  lucide.createIcons();
+}
+
+function telStart() {
+  telSt.running = true; telLog('Reparto de cuentas por emulador (30 por LDPlayer)', 'text-zinc-300');
+  renderTel();
+  telSt.timer = every(telTick, 120);
+}
+function bindTel() { if (!telSt) telSt = newTel(); renderTel(); }
+
+/* ---------- MONITOR: mapa de paradas por tipo ---------- */
+const MAP_CATS = {
+  restr: { label: 'Negocio con horario restrictivo', color: '#ef4444', n: 18 },
+  allday: { label: 'Negocio abierto todo el día', color: '#FF9900', n: 14 },
+  hub:   { label: 'Hub counter / Locker', color: '#a855f7', n: 6 },
+  cust:  { label: 'Cliente particular', color: '#3b82f6', n: 32 }
+};
+let mapSt = null;
+function mapPoints() {
+  let seed = 7;
+  const rnd = () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const vx = [60, 170, 290, 410, 530, 650, 740], hy = [50, 130, 215, 300, 380, 430];
+  const closes = ['13:00', '14:00', '14:00', '15:30', '15:30', '18:00'];
+  const pts = [];
+  Object.entries(MAP_CATS).forEach(([k, c]) => {
+    for (let i = 0; i < c.n; i++) {
+      let x, y;
+      if (rnd() < 0.5) { x = vx[Math.floor(rnd() * vx.length)] + (rnd() < .5 ? -9 : 9); y = 30 + rnd() * 410; }
+      else { y = hy[Math.floor(rnd() * hy.length)] + (rnd() < .5 ? -9 : 9); x = 30 + rnd() * 740; }
+      let info = 'Cliente particular · entrega a domicilio';
+      if (k === 'restr') info = `Comercio · cierra a las ${closes[Math.floor(rnd() * closes.length)]}`;
+      if (k === 'allday') info = 'Comercio · abierto todo el día';
+      if (k === 'hub') info = rnd() < .5 ? 'Hub counter · recogida en mostrador' : 'Locker · acceso 24 h';
+      pts.push({ k, x: Math.round(x), y: Math.round(y), info });
+    }
+  });
+  return pts;
+}
+const MAP_PTS = mapPoints();
+
+function monitorHTML() {
+  const vx = [60, 170, 290, 410, 530, 650, 740], hy = [50, 130, 215, 300, 380, 430];
+  const streets = vx.map(x => `<line x1="${x}" y1="10" x2="${x}" y2="450" />`).join('') + hy.map(y => `<line x1="10" y1="${y}" x2="790" y2="${y}" />`).join('');
+  return `<div id="mapRoot" class="fade-in">
+    <style>@keyframes mapPulse{0%{r:6;opacity:.7}100%{r:16;opacity:0}} .map-pulse{animation:mapPulse 1.8s ease-out infinite}</style>
+    <div class="flex flex-wrap items-center gap-2" id="mapLegend"></div>
+    <div class="mt-3 relative rounded-xl border border-white/10 overflow-hidden bg-[#0d0f13]">
+      <svg viewBox="0 0 800 460" class="w-full h-auto block" role="img" aria-label="Mapa de paradas por tipo">
+        <path d="M0 360 C140 330 250 400 380 365 S640 300 800 335 L800 360 C650 330 520 395 380 392 S130 360 0 390 Z" fill="#12263a" opacity=".7"/>
+        <rect x="190" y="145" width="80" height="55" rx="6" fill="#10261c" opacity=".8"/>
+        <rect x="550" y="60" width="85" height="55" rx="6" fill="#10261c" opacity=".8"/>
+        <g stroke="#262a33" stroke-width="7" stroke-linecap="round">${streets}</g>
+        <g stroke="#1b1e25" stroke-width="2" stroke-linecap="round"><line x1="20" y1="440" x2="780" y2="20" stroke-dasharray="2 6"/></g>
+        <g id="mapPts"></g>
+      </svg>
+      <div id="mapTip" class="hidden absolute pointer-events-none px-2.5 py-1.5 rounded-md bg-zinc-900/95 border border-white/15 text-[11px] text-zinc-200 whitespace-nowrap shadow-lg"></div>
+    </div>
+    <p class="mt-2 text-[11px] text-zinc-600">Mapa esquemático con paradas ficticias. Pulsa la leyenda para filtrar por tipo y pasa el cursor sobre una parada para ver el detalle.</p>
+  </div>`;
+}
+
+function renderMap() {
+  const gp = document.getElementById('mapPts'), lg = document.getElementById('mapLegend'), tip = document.getElementById('mapTip');
+  if (!gp || !mapSt) return;
+  lg.innerHTML = Object.entries(MAP_CATS).map(([k, c]) => {
+    const on = mapSt.on[k];
+    const shape = k === 'hub' ? `<span class="w-3 h-3 rounded-[3px]" style="background:${c.color}"></span>` : `<span class="w-3 h-3 rounded-full" style="background:${c.color}"></span>`;
+    return `<button type="button" data-k="${k}" aria-pressed="${on}" class="inline-flex items-center gap-2 text-xs px-3 py-1.5 rounded-lg border transition ${on ? 'border-white/20 bg-white/[0.06] text-zinc-100' : 'border-white/5 text-zinc-600 line-through'}">${shape}${c.label}<span class="font-mono text-zinc-500">${c.n}</span></button>`;
+  }).join('');
+  lg.onclick = e => { const b = e.target.closest('[data-k]'); if (!b) return; mapSt.on[b.dataset.k] = !mapSt.on[b.dataset.k]; renderMap(); };
+  gp.innerHTML = MAP_PTS.filter(p => mapSt.on[p.k]).map((p, i) => {
+    const c = MAP_CATS[p.k].color;
+    const ring = p.k === 'restr' ? `<circle cx="${p.x}" cy="${p.y}" r="6" fill="none" stroke="${c}" stroke-width="1.5" class="map-pulse" style="animation-delay:${(i % 6) * .3}s"/>` : '';
+    const mark = p.k === 'hub'
+      ? `<rect x="${p.x - 6.5}" y="${p.y - 6.5}" width="13" height="13" rx="3" fill="${c}" stroke="#0d0f13" stroke-width="2"/>`
+      : `<circle cx="${p.x}" cy="${p.y}" r="${p.k === 'cust' ? 5 : 6.5}" fill="${c}" stroke="#0d0f13" stroke-width="2"/>`;
+    return `<g class="cursor-pointer" data-info="${esc(p.info)}" data-c="${c}" data-x="${p.x}" data-y="${p.y}">${ring}${mark}</g>`;
+  }).join('');
+  const svg = gp.ownerSVGElement;
+  gp.onmouseover = e => {
+    const g = e.target.closest('[data-info]'); if (!g) return;
+    const box = svg.getBoundingClientRect(), k = box.width / 800;
+    tip.innerHTML = `<span class="inline-block w-2 h-2 rounded-full mr-1.5" style="background:${g.dataset.c}"></span>${g.dataset.info}`;
+    tip.classList.remove('hidden');
+    const tx = +g.dataset.x * k, ty = +g.dataset.y * k;
+    tip.style.left = Math.min(Math.max(tx - tip.offsetWidth / 2, 6), box.width - tip.offsetWidth - 6) + 'px';
+    tip.style.top = Math.max(ty - 38, 4) + 'px';
+  };
+  gp.onmouseout = () => tip.classList.add('hidden');
+}
+function bindMonitor() { if (!mapSt) mapSt = { on: { restr: true, allday: true, hub: true, cust: true } }; renderMap(); }
+
+/* Registro de demos por proyecto */
+const DEMOS = {
+  cortex: { html: () => simulatorHTML(), bind: bindSimulator },
+  dnr: { html: dnrHTML, bind: bindDnr },
+  telematics: { html: telHTML, bind: bindTel },
+  monitor: { html: monitorHTML, bind: bindMonitor }
+};
+
+/* ---------- RENDER PROYECTOS ---------- */
+const tabList = document.getElementById('tabList');
+const panel = document.getElementById('projectPanel');
+const views = {}; // por proyecto: 'sim' | 'code'
+
+function codeBlock(p) {
+  return `
+      <div class="mt-6 code-block rounded-xl overflow-hidden fade-in">
+        <div class="flex items-center gap-1.5 px-4 py-2.5 border-b border-white/5">
+          <span class="w-2.5 h-2.5 rounded-full bg-red-500/70"></span><span class="w-2.5 h-2.5 rounded-full bg-yellow-500/70"></span><span class="w-2.5 h-2.5 rounded-full bg-emerald-500/70"></span>
+          <span class="ml-3 text-[11px] font-mono text-zinc-500">${p.id}.${p.id==='telematics'?'py':'js'}</span>
+        </div>
+        <pre class="p-4 text-[12.5px] leading-relaxed font-mono overflow-x-auto text-zinc-300">${p.code}</pre>
+      </div>`;
+}
+
+function renderPanel(p) {
+  const li = (arr, icon, color) => arr.map(x => `<li class="flex gap-3 text-sm text-zinc-300"><i data-lucide="${icon}" class="w-4 h-4 mt-0.5 shrink-0 ${color}"></i><span>${x}</span></li>`).join('');
+  const view = views[p.id] || 'sim';
+  clearDemoTimers();
+  const viewBtn = (v, icon, label) => `<button type="button" data-view="${v}" aria-pressed="${view===v}" class="view-btn inline-flex items-center gap-2 text-xs font-semibold px-3.5 py-2 rounded-lg border border-white/10 bg-white/[0.03] text-zinc-400 hover:text-white transition"><i data-lucide="${icon}" class="w-4 h-4"></i> ${label}</button>`;
+  const viewSwitch = `
+      <div class="mt-6 flex flex-wrap gap-2" role="group" aria-label="Vista del proyecto">${viewBtn('sim','play-circle','Demo en vivo')}${viewBtn('code','code-2','Código')}</div>`;
+  const demoArea = view === 'sim' ? `<div class="mt-5">${DEMOS[p.id].html()}</div>` : codeBlock(p);
+
+  panel.innerHTML = `
+    <div class="fade-in">
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="w-11 h-11 rounded-xl bg-brand/15 text-brand grid place-items-center"><i data-lucide="${p.icon}" class="w-5 h-5"></i></span>
+        <div>
+          <h3 class="text-xl sm:text-2xl font-bold tracking-tight">${p.short}</h3>
+          <p class="text-xs font-mono text-zinc-500">${p.tag}</p>
+        </div>
+      </div>
+
+      <div class="mt-6 flex flex-wrap items-center gap-2 text-[11px] font-mono text-zinc-400">
+        ${p.arch.map((a,i)=>`<span class="px-2.5 py-1 rounded-md border border-white/10 bg-white/5">${a}</span>${i<p.arch.length-1?'<i data-lucide="chevron-right" class="w-3.5 h-3.5 text-zinc-600"></i>':''}`).join('')}
+      </div>
+
+      <div class="mt-7 grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="text-xs font-semibold uppercase tracking-wider text-red-400 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Problema operativo</h4>
+          <p class="mt-2 text-sm text-zinc-300 leading-relaxed">${p.problem}</p>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold uppercase tracking-wider text-brand flex items-center gap-2"><i data-lucide="cpu" class="w-3.5 h-3.5"></i> Solución tecnológica</h4>
+          <p class="mt-2 text-sm text-zinc-300 leading-relaxed">${p.solution}</p>
+        </div>
+      </div>
+
+      ${viewSwitch}
+      ${demoArea}
+
+      <div class="mt-6 grid md:grid-cols-2 gap-6">
+        <div>
+          <h4 class="text-xs font-semibold uppercase tracking-wider text-zinc-400 flex items-center gap-2"><i data-lucide="layers" class="w-3.5 h-3.5"></i> Stack</h4>
+          <div class="mt-3 flex flex-wrap gap-2">${p.stack.map(s=>`<span class="text-xs px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-zinc-300">${s}</span>`).join('')}</div>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold uppercase tracking-wider text-emerald-400 flex items-center gap-2"><i data-lucide="trending-up" class="w-3.5 h-3.5"></i> Resultados</h4>
+          <ul class="mt-3 space-y-2">${li(p.results,'check-circle-2','text-emerald-400')}</ul>
+        </div>
+      </div>
+    </div>`;
+
+  panel.querySelectorAll('.view-btn').forEach(b => b.addEventListener('click', () => {
+    views[p.id] = b.dataset.view;
+    renderPanel(p);
+  }));
+  if (view === 'sim') DEMOS[p.id].bind();
+  lucide.createIcons();
+}
+
+function selectTab(i) {
+  tabList.querySelectorAll('.tab-btn').forEach((b, idx) => b.setAttribute('aria-selected', idx === i ? 'true' : 'false'));
+  renderPanel(projects[i]);
+}
+
+projects.forEach((p, i) => {
+  const b = document.createElement('button');
+  b.className = 'tab-btn shrink-0 lg:shrink text-left rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3.5 text-zinc-400 hover:text-white hover:border-white/25 transition min-w-[220px] lg:min-w-0';
+  b.setAttribute('role', 'tab');
+  b.innerHTML = `<div class="flex items-center gap-3"><span class="tab-num font-mono text-xs text-zinc-600">0${i+1}</span><span class="text-sm font-semibold leading-snug">${p.short}</span></div><div class="mt-1 pl-7 text-[11px] font-mono text-zinc-600">${p.tag}</div>`;
+  b.addEventListener('click', () => selectTab(i));
+  tabList.appendChild(b);
+});
+
+const listHTML = (arr, color) => arr.map(([t, d, ic]) => `<li class="flex gap-3"><i data-lucide="${ic}" class="w-4 h-4 mt-1 shrink-0 ${color}"></i><span><span class="font-semibold text-zinc-100">${t}.</span> <span class="text-zinc-400 text-sm">${d}</span></span></li>`).join('');
+document.getElementById('skillsOps').innerHTML = listHTML(skillsOps, 'text-brand');
+document.getElementById('skillsEng').innerHTML = listHTML(skillsEng, 'text-emerald-400');
+document.getElementById('chips').innerHTML = chips.map(c => `<span class="text-xs font-mono px-3 py-1.5 rounded-full border border-white/10 bg-white/[0.03] text-zinc-300">${c}</span>`).join('');
+document.getElementById('year').textContent = new Date().getFullYear();
+
+selectTab(0);
+lucide.createIcons();
+
+/* ---------- NAV ---------- */
+const nav = document.getElementById('nav');
+const onScroll = () => {
+  const s = window.scrollY > 20;
+  nav.classList.toggle('bg-zinc-950/80', s);
+  nav.classList.toggle('backdrop-blur-md', s);
+  nav.classList.toggle('border-b', s);
+  nav.classList.toggle('border-white/10', s);
+};
+onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
+const mm = document.getElementById('mobileMenu');
+document.getElementById('menuBtn').addEventListener('click', () => mm.classList.toggle('hidden'));
+mm.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mm.classList.add('hidden')));
+
+/* ---------- REVEAL + COUNTERS ---------- */
+const countUp = el => {
+  const target = +el.dataset.count, dur = 1400, start = performance.now();
+  const fmt = n => el.dataset.fmt === 'es' ? n.toLocaleString('es-ES') : n;
+  const tick = now => {
+    const p = Math.min((now - start) / dur, 1), e = 1 - Math.pow(1 - p, 3);
+    el.textContent = fmt(Math.round(target * e));
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+};
+const io = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (!en.isIntersecting) return;
+    en.target.classList.add('in');
+    en.target.querySelectorAll('[data-count]').forEach(countUp);
+    io.unobserve(en.target);
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
