@@ -148,12 +148,12 @@
         <div class="max-w-2xl reveal">
           <p class="text-sm font-mono text-brand">// casos de estudio</p>
           <h2 class="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight">Automatización nacida del suelo de operaciones</h2>
-          <p class="mt-4 text-zinc-400">Cada herramienta resuelve un problema que viví como Jefe de Tráfico. No son demos: se usan a diario en producción. En la primera puedes probar la lógica de auditoría en vivo.</p>
+          <p class="mt-4 text-zinc-400">Cada herramienta resuelve un problema que viví como Jefe de Tráfico. No son demos: se usan a diario en producción. En cada una puedes probar una demo interactiva con datos ficticios.</p>
         </div>
 
         <div class="mt-12 grid lg:grid-cols-[300px_1fr] gap-6 reveal">
           <div id="tabList" role="tablist" aria-label="Proyectos" class="flex lg:flex-col gap-2 overflow-x-auto pb-2 lg:pb-0 -mx-5 px-5 lg:mx-0 lg:px-0"></div>
-          <div id="projectPanel" class="card rounded-2xl p-6 sm:p-8 min-h-[520px]"></div>
+          <div id="projectPanel" class="min-w-0 card rounded-2xl p-6 sm:p-8 min-h-[520px]"></div>
         </div>
       </div>
     </section>
@@ -567,7 +567,7 @@ function renderSim() {
     const stops = n ? sim.stops.filter(s => n.ids.includes(s.id)) : atRiskStops(r);
     const driver = stops[0].driver;
     const state = !n
-      ? `<button data-action="notify" data-route="${r}" class="shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-emerald-500 text-emerald-950 font-semibold text-xs hover:bg-emerald-400 transition"><i data-lucide="message-circle" class="w-4 h-4"></i> Avisar por WhatsApp</button>`
+      ? `<button data-action="notify" data-route="${r}" class="shrink-0 self-start inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-emerald-500 text-emerald-950 font-semibold text-xs hover:bg-emerald-400 transition"><i data-lucide="message-circle" class="w-4 h-4"></i> Avisar por WhatsApp</button>`
       : n.state === 'sent'
         ? `<span class="shrink-0 inline-flex items-center gap-2 text-xs text-amber-300"><i data-lucide="loader-circle" class="w-4 h-4 animate-spin"></i> Aviso enviado</span>`
         : `<span class="shrink-0 inline-flex items-center gap-2 text-xs text-emerald-300 font-semibold"><i data-lucide="circle-check-big" class="w-4 h-4"></i> Entregado a tiempo</span>`;
@@ -575,7 +575,7 @@ function renderSim() {
       <div class="mt-3 rounded-lg rounded-tl-none bg-emerald-900/40 border border-emerald-500/20 p-3 text-xs text-zinc-200 whitespace-pre-wrap leading-relaxed">${esc(n.msg)}</div>
       <a href="https://wa.me/?text=${encodeURIComponent(n.msg)}" target="_blank" rel="noopener" class="mt-2 inline-flex items-center gap-1.5 text-[11px] text-emerald-400 hover:text-emerald-300"><i data-lucide="external-link" class="w-3 h-3"></i> Abrir en WhatsApp</a>` : '';
     return `<div class="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-      <div class="flex items-start justify-between gap-3">
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div class="min-w-0">
           <div class="text-sm"><span class="font-mono font-semibold text-brand">${r}</span> <span class="text-zinc-400">· ${esc(driver)}</span></div>
           <ul class="mt-2 space-y-1.5">
@@ -692,13 +692,14 @@ function renderDnr() {
         ? `<span class="text-[11px] text-zinc-600 font-mono">Sin avisos</span>`
         : st === 'sent' ? `<span class="inline-flex items-center gap-1.5 text-xs text-emerald-400 font-semibold"><i data-lucide="check-check" class="w-4 h-4"></i> Enviado</span>`
         : st === 'sending' ? `<span class="inline-flex items-center gap-1.5 text-xs text-zinc-400"><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Enviando…</span>`
-        : `<button data-a="send" data-r="${r.route}" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-500/90 text-zinc-950 hover:bg-emerald-400 transition"><i data-lucide="send" class="w-3.5 h-3.5"></i> Enviar direcciones</button>`;
+        : `<button data-a="send" data-r="${r.route}" class="inline-flex items-center gap-1.5 whitespace-nowrap text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-500/90 text-zinc-950 hover:bg-emerald-400 transition"><i data-lucide="send" class="w-3.5 h-3.5"></i> <span class="hidden xl:inline">Enviar direcciones</span><span class="xl:hidden">Enviar</span></button>`;
       const w = r.flag ? Math.max(8, Math.round(r.flag / maxF * 100)) : 0;
-      return `<div class="grid grid-cols-[auto_1fr_auto] sm:grid-cols-[84px_1fr_150px_auto] items-center gap-x-3 gap-y-1 px-3.5 py-3 border-t border-white/5">
-        <span class="font-mono text-xs text-zinc-300">${r.route}</span>
-        <span class="text-xs text-zinc-400">${esc(r.driver)} <span class="text-zinc-600">· ${r.stops} paradas</span></span>
+      return `<div class="grid grid-cols-[1fr_auto] sm:grid-cols-[72px_1fr_110px_auto] items-center gap-x-3 gap-y-1 px-3.5 py-3 border-t border-white/5">
+        <div class="min-w-0 sm:contents">
+          <div class="flex items-center gap-2"><span class="font-mono text-xs text-zinc-300">${r.route}</span><span class="sm:hidden text-[11px] px-1.5 py-0.5 rounded ${r.flag ? 'bg-brand/15 text-brand' : 'bg-white/5 text-zinc-600'} font-semibold">${r.flag} ${r.flag === 1 ? 'dirección' : 'direcciones'}</span></div>
+          <span class="block text-xs text-zinc-400 mt-0.5 sm:mt-0">${esc(r.driver)} <span class="text-zinc-600">· ${r.stops} paradas</span></span></div>
         <div class="hidden sm:flex items-center gap-2"><div class="flex-1 h-1.5 rounded-full bg-white/5 overflow-hidden"><div class="h-full rounded-full ${r.flag >= 6 ? 'bg-red-500' : r.flag >= 3 ? 'bg-brand' : 'bg-yellow-400'}" style="width:${w}%"></div></div><span class="text-sm font-bold tabular-nums w-5 text-right ${r.flag ? 'text-white' : 'text-zinc-600'}">${r.flag}</span></div>
-        <div class="text-right">${btn}</div></div>`;
+        <div class="text-right whitespace-nowrap">${btn}</div></div>`;
     }).join('');
     const bubble = s.last ? `<div class="rounded-2xl rounded-tl-sm bg-emerald-900/40 border border-emerald-500/20 p-3.5 text-[12.5px] text-emerald-50 leading-relaxed whitespace-pre-line fade-in">${esc(s.last.msg)}<div class="mt-2 text-[10px] text-emerald-300/70 text-right">${s.last.at} ✓✓</div></div>`
       : `<p class="text-xs text-zinc-600 text-center py-8">Pulsa «Enviar direcciones» para simular el aviso por WhatsApp.</p>`;
@@ -888,10 +889,11 @@ const MAP_PTS = mapPoints();
 function monitorHTML() {
   const vx = [60, 170, 290, 410, 530, 650, 740], hy = [50, 130, 215, 300, 380, 430];
   const streets = vx.map(x => `<line x1="${x}" y1="10" x2="${x}" y2="450" />`).join('') + hy.map(y => `<line x1="10" y1="${y}" x2="790" y2="${y}" />`).join('');
-  return `<div id="mapRoot" class="fade-in">
+  return `<div id="mapRoot" class="fade-in min-w-0 max-w-full">
     <style>@keyframes mapPulse{0%{r:6;opacity:.7}100%{r:16;opacity:0}} .map-pulse{animation:mapPulse 1.8s ease-out infinite}</style>
     <div class="flex flex-wrap items-center gap-2" id="mapLegend"></div>
-    <div class="mt-3 relative rounded-xl border border-white/10 overflow-hidden bg-[#0d0f13]">
+    <div class="mt-3 rounded-xl border border-white/10 overflow-x-auto bg-[#0d0f13]">
+     <div class="relative min-w-[640px]">
       <svg viewBox="0 0 800 460" class="w-full h-auto block" role="img" aria-label="Mapa de paradas por tipo">
         <path d="M0 360 C140 330 250 400 380 365 S640 300 800 335 L800 360 C650 330 520 395 380 392 S130 360 0 390 Z" fill="#12263a" opacity=".7"/>
         <rect x="190" y="145" width="80" height="55" rx="6" fill="#10261c" opacity=".8"/>
@@ -901,8 +903,9 @@ function monitorHTML() {
         <g id="mapPts"></g>
       </svg>
       <div id="mapTip" class="hidden absolute pointer-events-none px-2.5 py-1.5 rounded-md bg-zinc-900/95 border border-white/15 text-[11px] text-zinc-200 whitespace-nowrap shadow-lg"></div>
+     </div>
     </div>
-    <p class="mt-2 text-[11px] text-zinc-600">Mapa esquemático con paradas ficticias. Pulsa la leyenda para filtrar por tipo y pasa el cursor sobre una parada para ver el detalle.</p>
+    <p class="mt-2 text-[11px] text-zinc-600">Mapa esquemático con paradas ficticias. Pulsa la leyenda para filtrar por tipo; toca o pasa el cursor sobre una parada para ver el detalle. En el móvil, desliza el mapa en horizontal.</p>
   </div>`;
 }
 
@@ -934,6 +937,7 @@ function renderMap() {
     tip.style.top = Math.max(ty - 38, 4) + 'px';
   };
   gp.onmouseout = () => tip.classList.add('hidden');
+  gp.onclick = gp.onmouseover;
 }
 function bindMonitor() { if (!mapSt) mapSt = { on: { restr: true, allday: true, hub: true, cust: true } }; renderMap(); }
 
